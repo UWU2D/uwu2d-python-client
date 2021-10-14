@@ -6,9 +6,10 @@ import pygame
 
 
 class CircleSprite(Sprite):
-    def __init__(
-        self, id, position=Vector2D(0, 0), radius=1, color="red", *args, **kwargs
-    ):
+    def __init__(self, id, position=None, radius=1, color="red", *args, **kwargs):
+
+        if position is None:
+            position = Vector2D(0, 0)
 
         self.radius = radius
         self.position = position
