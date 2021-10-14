@@ -19,6 +19,13 @@ class Sprite:
         self.debug_name = debug_name
         self.drawable = self.get_drawable()
 
+        self.x_velocity = 0
+        self.y_velocity = 0
+
+        # TODO Accel?
+        self.x_accel = 0
+        self.y_accel = 0
+
     def tick(self, dt):
         pass
 
@@ -26,4 +33,10 @@ class Sprite:
         return None
 
     def from_sync_info(self, info):
-        self.color = info["data"].get("color", self.color)
+        data = info["data"]
+
+        self.color = data.get("color", self.color)
+        self.x_velocity = data.get("xVelocity", self.x_velocity)
+        self.y_velocity = data.get("yVelocity", self.y_velocity)
+        self.x_accel = data.get("xAccel", self.x_accel)
+        self.y_accel = data.get("yAccel", self.y_accel)

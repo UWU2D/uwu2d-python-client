@@ -31,7 +31,6 @@ def run(game: GameClient):
     last_tick = timer()
     while not game.exit:
         now = timer()
-        # if (now - last_tick) >= tick_period:
         event_manager.update()
         game.on_tick(now - last_tick)
         last_tick = now

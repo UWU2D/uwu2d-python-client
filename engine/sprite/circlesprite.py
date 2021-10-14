@@ -7,21 +7,22 @@ import pygame
 
 class CircleSprite(Sprite):
     def __init__(self, id, position=None, radius=1, color="red", *args, **kwargs):
+        super().__init__(id, *args, **kwargs)
 
         if position is None:
             position = Vector2D(0, 0)
-
         self.radius = radius
         self.position = position
+
         if color is not None and isinstance(color, str):
             color = pygame.Color(color)
-
         self.color = pygame.Color(color)
-
-        super().__init__(id, *args, **kwargs)
 
     def tick(self, dt):
         super().tick(dt)
+
+        self.position.x += self.x_velocity * dt
+        self.position.y += self.y_velocity * dt
 
     def set_radius(self, radius):
         self.radius = radius

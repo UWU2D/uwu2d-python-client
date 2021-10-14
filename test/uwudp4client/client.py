@@ -4,7 +4,6 @@ import uuid
 
 
 def create():
-    # return UWUDP4Client(host="76.200.210.99")
     return UWUDP4Client(host="127.0.0.1")
 
 

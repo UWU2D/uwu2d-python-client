@@ -14,7 +14,7 @@ class NetworkGameClient(GameClient):
 
         self.join_id = str(uuid.uuid4())
         self.client_id = None
-
+        self.initial_sync = False
         # monkey patch tcp client
         # self.tcp_client:TCPClient       = TCPClient(host=host, port=port)
         # self.tcp_client.on_connect      = self.on_connect
@@ -84,5 +84,15 @@ class NetworkGameClient(GameClient):
     def on_tick(self, dt):
         super().on_tick(dt=dt)
 
+        if not self.initial_sync and self.client_id != None:
+            self.initial_sync = True
+            self.udp_client.send_message(
+                {
+                    "type": "game",
+                    "messageId": str(uuid.uuid4()),
+                    "clientId": self.client_id,
+                    "data": {"type": "sync"},
+                }
+            )
         # self.tcp_client.process()
         self.udp_client.process()
