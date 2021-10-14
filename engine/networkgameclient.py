@@ -4,7 +4,6 @@ from engine.services.inputservice import InputService
 from engine.sprite.polygonsprite2d import PolygonSprite2D
 
 from engine.sprite.circlesprite import CircleSprite
-from engine.sprite.boxsprite2d import BoxSprite2D
 from engine.network.udp.udpclient import UDPClient
 from engine.gameclient import GameClient
 
@@ -64,8 +63,6 @@ class NetworkGameClient(GameClient):
             # we have not encountered this sprite yet
             if id not in self.sprites:
                 # create it based on the types we know
-                if type == "square":
-                    self.sprites[id] = BoxSprite2D(id=id)
                 if type == "circle":
                     self.sprites[id] = CircleSprite(id=id)
                 elif type == "polygon":
