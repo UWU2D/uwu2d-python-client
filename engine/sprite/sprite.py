@@ -1,4 +1,6 @@
 from __future__ import annotations
+
+import pygame
 from engine.drawable.drawable import Drawable
 import math
 from engine.math.vector2d import Vector2D
@@ -100,6 +102,9 @@ class Sprite:
         }
 
     def from_sync_info(self, info):
+
+        color = info["data"].get("color", "pink")
+        self.color = pygame.Color(color)
 
         self.position_vector.x = info.get("x", self.position_vector.x)
         self.position_vector.y = info.get("y", self.position_vector.y)

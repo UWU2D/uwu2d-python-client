@@ -31,10 +31,11 @@ def run(game: GameClient):
     last_tick = timer()
     while not game.exit:
         now = timer()
-        if (now - last_tick) >= tick_period:
-            last_tick = now
-            event_manager.update()
-            game.on_tick(now - last_tick)
+        # if (now - last_tick) >= tick_period:
+        event_manager.update()
+        game.on_tick(now - last_tick)
+        last_tick = now
+
 
 ########################################################################################################################
 #
@@ -42,7 +43,9 @@ def run(game: GameClient):
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--game-package', dest='game_package',  help='Path to the game module to load')
+    parser.add_argument(
+        "--game-package", dest="game_package", help="Path to the game module to load"
+    )
 
     args = parser.parse_args(sys.argv[1:])
 
@@ -56,5 +59,5 @@ def main():
 ########################################################################################################################
 #
 ########################################################################################################################
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

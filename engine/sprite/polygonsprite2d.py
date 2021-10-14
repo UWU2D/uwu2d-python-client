@@ -7,7 +7,7 @@ import pygame
 
 
 class PolygonSprite2D(Sprite):
-    def __init__(self, id, points=None, color=None, *args, **kwargs):
+    def __init__(self, id, points=None, color="red", *args, **kwargs):
 
         if color is not None and isinstance(color, str):
             color = pygame.Color(color)
@@ -22,13 +22,7 @@ class PolygonSprite2D(Sprite):
         super().__init__(id, *args, **kwargs)
 
     def tick(self, dt):
-        super().tick()
-
-        if self.collider is not None:
-            self.collider.position_vector.x = self.position_vector.x
-            self.collider.position_vector.y = self.position_vector.y
-            self.collider.scale_vector.x = self.scale_vector.x
-            self.collider.scale_vector.y = self.scale_vector.y
+        super().tick(dt)
 
     def get_drawable(self):
         return PolygonDrawable()
@@ -89,15 +83,6 @@ class PolygonSprite2D(Sprite):
     def from_sync_info(self, info):
         super().from_sync_info(info)
 
-        if "points" in info:
-            self.points[:] = [(p["x"], p["y"]) for p in info["points"]]
+        points = info["data"].get("points", [])
 
-        if self.color is None:
-            self.color = pygame.Color(0, 0, 0, 1)
-
-        if "color" in info:
-            color_info = info["color"]
-            self.color.r = color_info.get("r", self.color.r)
-            self.color.g = color_info.get("g", self.color.g)
-            self.color.b = color_info.get("b", self.color.b)
-            self.color.a = color_info.get("a", self.color.a)
+        self.points[:] = [(p["x"], p["y"]) for p in points]

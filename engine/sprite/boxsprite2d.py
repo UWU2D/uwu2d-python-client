@@ -6,7 +6,7 @@ import pygame
 
 
 class BoxSprite2D(Sprite):
-    def __init__(self, id, scale=Vector2D(x=1, y=1), color=None, *args, **kwargs):
+    def __init__(self, id, scale=Vector2D(x=1, y=1), color="red", *args, **kwargs):
 
         self.scale_vector = Vector2D(scale.x, scale.y)
 

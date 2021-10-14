@@ -54,7 +54,7 @@ class UWUDP4Client(NetworkGameClient):
                 "type": "game",
                 "messageId": str(uuid.uuid4()),
                 "clientId": self.client_id,
-                "data": {"type": "key_press", "key": key_name, "pressed": pressed},
+                "data": {"type": "keyPress", "key": key_name, "pressed": pressed},
             }
         )
 

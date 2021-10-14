@@ -1,12 +1,12 @@
 import uuid
 from engine.network.udp.udpclient import UDPClient
+from engine.services.inputservice import InputService
 from engine.sprite.polygonsprite2d import PolygonSprite2D
 
 from engine.sprite.circlesprite import CircleSprite
 from engine.sprite.boxsprite2d import BoxSprite2D
 from engine.network.udp.udpclient import UDPClient
 from engine.gameclient import GameClient
-from engine.gameservice import GameService
 
 
 class NetworkGameClient(GameClient):

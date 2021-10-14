@@ -5,14 +5,14 @@ import pygame
 
 
 class CircleSprite(Sprite):
-    def __init__(self, id, radius=1, color=None, *args, **kwargs):
+    def __init__(self, id, radius=1, color="red", *args, **kwargs):
 
         self.radius = radius
 
         if color is not None and isinstance(color, str):
             color = pygame.Color(color)
 
-        self.color = pygame.Color("red")
+        self.color = pygame.Color(color)
 
         super().__init__(id, *args, **kwargs)
 
@@ -52,7 +52,7 @@ class CircleSprite(Sprite):
     def from_sync_info(self, info):
         super().from_sync_info(info)
 
-        self.radius = 20  # info.get('r', self.radius)
+        self.radius = info["data"]["radius"]
 
         if self.color is None:
             self.color = pygame.Color(0, 0, 0, 1)
