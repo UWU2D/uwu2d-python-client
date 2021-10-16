@@ -34,6 +34,5 @@ class CircleSprite(Sprite):
     def from_sync_info(self, info):
         super().from_sync_info(info)
         self.radius = info["data"]["radius"]
-        self.color = info["data"].get("color", self.color)
         self.position.x = info["x"]
         self.position.y = info["y"]

@@ -35,7 +35,12 @@ class Sprite:
     def from_sync_info(self, info):
         data = info["data"]
 
-        self.color = data.get("color", self.color)
+        if 'rgba' in data:
+            rgba = data['rgba']
+            self.color = pygame.color(rgba[0], rgba[1], rgba[2], rgba[3] * 255)
+        elif 'color' in data:
+            self.color = data['color']
+
         self.x_velocity = data.get("xVelocity", self.x_velocity)
         self.y_velocity = data.get("yVelocity", self.y_velocity)
         self.x_accel = data.get("xAccel", self.x_accel)
