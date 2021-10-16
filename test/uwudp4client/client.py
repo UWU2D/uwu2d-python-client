@@ -14,7 +14,7 @@ class UWUDP4Client(NetworkGameClient):
     def on_read(self, s, data):
         super().on_read(s, data)
 
-        if data["type"] == "internal":
+        if data["type"] == "handshake":
             self.client_id = data["data"]["id"]
             self.connected = True
 
