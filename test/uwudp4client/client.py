@@ -11,12 +11,8 @@ class UWUDP4Client(NetworkGameClient):
     def __init__(self, host):
         super().__init__(host=host, port=41234)
 
-    def on_read(self, s, data):
-        super().on_read(s, data)
-
-        if data["type"] == "handshake":
-            self.client_id = data["data"]["id"]
-            self.connected = True
+    def on_read(self, s, message):
+        super().on_read(s, message)
 
     def on_load(self, game_service):
         super().on_load(game_service)
