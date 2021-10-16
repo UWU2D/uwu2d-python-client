@@ -25,8 +25,10 @@ class PolygonSprite2D(Sprite):
         super().tick(dt)
 
         for i in range(len(self.points)):
-            self.points[i].x += self.x_velocity * dt
-            self.points[i].y += self.y_velocity * dt
+            self.points[i] = (
+                self.points[i][0] + self.x_velocity * dt,
+                self.points[i][1] + self.y_velocity * dt,
+            )
 
     def get_drawable(self):
         return PolygonDrawable()
