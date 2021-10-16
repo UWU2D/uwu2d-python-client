@@ -48,7 +48,7 @@ class NetworkGameClient(GameClient):
         typekey = data["type"]
         data = data["data"]
 
-        if typekey == "internal":
+        if typekey == "handshake":
             self.client_id = data["id"]
         elif typekey == "game":
             self.sync_entities(data)
