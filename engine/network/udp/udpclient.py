@@ -11,7 +11,7 @@ class UDPClient(UDPBase):
         self.self_port = self_port
         if self.self_port is not None:
             self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 8192)
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 256000)
             # self.socket.bind(('', self.self_port))
             self.socket.setblocking(False)
 

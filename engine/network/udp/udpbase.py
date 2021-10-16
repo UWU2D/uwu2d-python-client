@@ -17,24 +17,24 @@ class UDPBase:
         raise NotImplementedError("Implement UDPBase.on_read")
 
     def read(self):
+        while True:
+            try:
+                raw_buffer, sender = self.socket.recvfrom(8192)
+            except socket.error as e:
+                if e.errno != 10035:
+                    pass
+                    # print (str(e))
+                return
 
-        try:
-            raw_buffer, sender = self.socket.recvfrom(8192)
-        except socket.error as e:
-            if e.errno != 10035:
-                pass
-                # print (str(e))
-            return
+            if raw_buffer in [None, b""]:
+                return
 
-        if raw_buffer in [None, b""]:
-            return
+            # put it in string form
+            data = raw_buffer.decode()
 
-        # put it in string form
-        data = raw_buffer.decode()
+            data = json.loads(data)
 
-        data = json.loads(data)
-
-        self.on_read(sender, data)
+            self.on_read(sender, data)
 
     def send_to(self, host, port, data):
 
