@@ -30,7 +30,7 @@ class NetworkGameClient(GameClient):
     def on_load(self, game_service):
         super().on_load(game_service)
 
-        self.udp_client.send_message({"type": "internal", "messageId": self.join_id})
+        self.udp_client.send_message({"type": "handshake", "messageId": self.join_id})
 
     def on_connect(self, s):
         pass
