@@ -2,11 +2,11 @@ import pygame
 
 
 class GameClient:
-    def __init__(self, should_render=True):
+    def __init__(self, width, height, should_render=True):
         self.tick_rate = 60
         self.exit = False
-        self.width = 680
-        self.height = 420
+        self.width = width
+        self.height = height
 
         self.next_id = 0
 

@@ -33,8 +33,8 @@ class PolygonSprite2D(Sprite):
     def get_drawable(self):
         return PolygonDrawable()
 
-    def from_sync_info(self, info):
-        super().from_sync_info(info)
+    def sync(self, info):
+        super().sync(info)
 
         points = info["data"].get("points", [])
         self.points[:] = [(p["x"], p["y"]) for p in points]

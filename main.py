@@ -1,6 +1,3 @@
-########################################################################################################################
-#
-########################################################################################################################
 import argparse
 import sys
 
@@ -14,19 +11,14 @@ from timeit import default_timer as timer
 
 import pygame
 
-########################################################################################################################
-#
-########################################################################################################################
+
 def run(game: GameClient):
     pygame.init()
     screen = pygame.display.set_mode((game.width, game.height))
-    clock = pygame.time.Clock()
     event_manager = EventManager()
     game_service = GameService(event_manager=event_manager)
 
     game.on_load(game_service=game_service)
-
-    tick_period = 1.0 / float(game.tick_rate)
 
     last_tick = timer()
     while not game.exit:
@@ -48,7 +40,8 @@ def main():
 
     args = parser.parse_args(sys.argv[1:])
 
-    spec = importlib.util.spec_from_file_location("game_package", args.game_package)
+    spec = importlib.util.spec_from_file_location(
+        "game_package", args.game_package)
     game_package = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(game_package)
     game = game_package.create()

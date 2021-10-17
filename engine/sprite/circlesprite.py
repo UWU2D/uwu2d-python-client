@@ -31,8 +31,8 @@ class CircleSprite(Sprite):
     def get_drawable(self):
         return CircleDrawable()
 
-    def from_sync_info(self, info):
-        super().from_sync_info(info)
+    def sync(self, info):
+        super().sync(info)
         self.radius = info["data"]["radius"]
         self.position.x = info["x"]
         self.position.y = info["y"]
