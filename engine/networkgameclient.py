@@ -143,5 +143,8 @@ class NetworkGameClient(GameClient):
                 print("Unknown sprite type: " + type)
                 return
 
-        # Update the info
-        self.sprites[id].sync(game_object)
+        if game_object["state"] == "deleted":
+            self.destroy(id)
+        else:
+            # Update the info
+            self.sprites[id].sync(game_object)

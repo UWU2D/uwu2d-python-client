@@ -9,7 +9,7 @@ def create():
 
 class UWUDP4Client(NetworkGameClient):
     def __init__(self, host):
-        super().__init__(host=host, port=41234, width=680, height=420)
+        super().__init__(host=host, port=41234, width=1920, height=1080)
 
     def on_read(self, s, message):
         super().on_read(s, message)
@@ -30,7 +30,7 @@ class UWUDP4Client(NetworkGameClient):
         game_service.input_service.register_key_event(
             InputService.KEY_RIGHT, self.on_right_arrow
         )
-        game_service.input_service.register_mouse_motion(self.on_mouse_motion)
+        # game_service.input_service.register_mouse_motion(self.on_mouse_motion)
 
     def on_up_arrow(self, key, pressed):
         self.on_arrow("up", pressed)
@@ -45,24 +45,5 @@ class UWUDP4Client(NetworkGameClient):
         self.on_arrow("right", pressed)
 
     def on_arrow(self, key_name, pressed):
-        self.udp_client.send_message(
-            {
-                "type": "game",
-                "messageId": str(uuid.uuid4()),
-                "clientId": self.client_id,
-                "data": {"type": "keyPress", "key": key_name, "pressed": pressed},
-            }
-        )
-
-        self.next_id += 1
-
-    def on_mouse_motion(self, x, y):
-        self.udp_client.send_message(
-            {
-                "type": "game",
-                "messageId": str(uuid.uuid4()),
-                "clientId": self.client_id,
-                "data": {"type": "mouse", "x": x, "y": y},
-            }
-        )
-        self.next_id += 1
+        self.send_message(
+            "game", {"type": "keyPress", "key": key_name, "pressed": pressed})

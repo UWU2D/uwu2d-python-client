@@ -62,9 +62,6 @@ class GameClient:
         print("Destroying entities")
         self.sprites.clear()
 
-    def destroy(self, object):
-        if object is None:
-            return
-
-        if object.id in self.sprites:
-            del self.sprites[object.id]
+    def destroy(self, id):
+        if id in self.sprites:
+            del self.sprites[id]
