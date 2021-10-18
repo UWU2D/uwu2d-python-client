@@ -30,7 +30,7 @@ class UWUDP4Client(NetworkGameClient):
         game_service.input_service.register_key_event(
             InputService.KEY_RIGHT, self.on_right_arrow
         )
-        # game_service.input_service.register_mouse_motion(self.on_mouse_motion)
+        game_service.input_service.register_mouse_motion(self.on_mouse_motion)
 
     def on_up_arrow(self, key, pressed):
         self.on_arrow("up", pressed)
@@ -47,3 +47,6 @@ class UWUDP4Client(NetworkGameClient):
     def on_arrow(self, key_name, pressed):
         self.send_message(
             "game", {"type": "keyPress", "key": key_name, "pressed": pressed})
+
+    def on_mouse_motion(self, x, y):
+        self.send_message("game", {"type": "mouse", "x": x, "y": y})
