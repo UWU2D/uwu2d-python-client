@@ -5,11 +5,12 @@ import uuid
 
 def create():
     return UWUDP4Client(host="127.0.0.1")
+    # return UWUDP4Client(host="76.200.210.99")
 
 
 class UWUDP4Client(NetworkGameClient):
     def __init__(self, host):
-        super().__init__(host=host, port=41234, width=1920, height=1080)
+        super().__init__(host=host, port=41234, width=1280, height=720)
 
     def on_read(self, s, message):
         super().on_read(s, message)
@@ -46,7 +47,8 @@ class UWUDP4Client(NetworkGameClient):
 
     def on_arrow(self, key_name, pressed):
         self.send_message(
-            "game", {"type": "keyPress", "key": key_name, "pressed": pressed})
+            "game", {"type": "keyPress", "key": key_name, "pressed": pressed}
+        )
 
     def on_mouse_motion(self, x, y):
         self.send_message("game", {"type": "mouse", "x": x, "y": y})

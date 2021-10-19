@@ -17,7 +17,7 @@ class NetworkGameClient(GameClient):
 
         self.client_id = None
 
-        self.handshake_timer = Timer(1000)
+        self.handshake_timer = Timer(10000)
         self.heartbeat_timer = Timer(2000)
 
         # monkey patch tcp client
@@ -36,7 +36,7 @@ class NetworkGameClient(GameClient):
             "handshake": self.on_handshake,
             "game": self.on_game,
             "heartbeat": self.on_heartbeat,
-            "state": self.on_state
+            "state": self.on_state,
         }
 
     def on_load(self, game_service):
@@ -59,9 +59,9 @@ class NetworkGameClient(GameClient):
         type = message["type"]
 
         if type not in self.message_processing:
-            print(f'Unknown message type {type}')
+            print(f"Unknown message type {type}")
 
-        self.message_processing[type](socket, message['data'])
+        self.message_processing[type](socket, message["data"])
 
     def on_handshake(self, socket, data):
         if self.client_id is None:
@@ -117,12 +117,14 @@ class NetworkGameClient(GameClient):
         if guarantee:
             transport = self.udp_client
 
-        transport.send_message({
-            "type": type,
-            "messageId": str(uuid.uuid4()),
-            "clientId": self.client_id,
-            "data": data
-        })
+        transport.send_message(
+            {
+                "type": type,
+                "messageId": str(uuid.uuid4()),
+                "clientId": self.client_id,
+                "data": data,
+            }
+        )
 
     def sync_entities(self, game_objects):
         for game_object in game_objects:
