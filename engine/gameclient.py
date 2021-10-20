@@ -41,7 +41,10 @@ class GameClient:
 
         self.game_service.event_manager.update()
 
-        pygame.event.pump()
+        try:
+            pygame.event.pump()
+        except Exception:
+            return
 
         if self.should_render:
             self.pre_render()

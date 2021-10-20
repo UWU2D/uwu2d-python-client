@@ -8,6 +8,8 @@ from engine.sprite.circlesprite import CircleSprite
 from engine.network.udp.udpclient import UDPClient
 from engine.gameclient import GameClient
 
+from engine.network.ws.wsclient import WSClient
+
 
 class NetworkGameClient(GameClient):
     def __init__(self, host, port, width, height, *args, **kwargs):
@@ -17,8 +19,8 @@ class NetworkGameClient(GameClient):
 
         self.client_id = None
 
-        self.handshake_timer = Timer(10000)
-        self.heartbeat_timer = Timer(2000)
+        self.handshake_timer = Timer(1000)
+        # self.heartbeat_timer = Timer(2000)
 
         # monkey patch tcp client
         # self.tcp_client:TCPClient       = TCPClient(host=host, port=port)
@@ -27,15 +29,19 @@ class NetworkGameClient(GameClient):
         # self.tcp_client.on_read         = self.on_read
 
         # monkey patch udp client
-        self.udp_client: UDPClient = UDPClient(
-            server_ip=host, server_port=port, self_port=port
-        )
-        self.udp_client.on_read = self.on_read
+        # self.udp_client: UDPClient = UDPClient(
+        #    server_ip=host, server_port=port, self_port=port
+        # )
+        # self.udp_client.on_read = self.on_read
+        self.ws_client = WSClient(host, port)
+        self.ws_client.on_connect = self.on_connect
+        self.ws_client.on_disconnect = self.on_disconnect
+        self.ws_client.on_read = self.on_read
 
         self.message_processing = {
             "handshake": self.on_handshake,
             "game": self.on_game,
-            "heartbeat": self.on_heartbeat,
+            # "heartbeat": self.on_heartbeat,
             "state": self.on_state,
         }
 
@@ -43,16 +49,18 @@ class NetworkGameClient(GameClient):
         super().on_load(game_service)
 
     def on_connect(self, s):
-        self.heartbeat_timer.reset()
+        self.connected = True
+        # self.heartbeat_timer.reset()
 
     def on_disconnect(self):
         self.destroy_all_entities()
         self.client_id = None
+        self.connected = False
 
     def on_close(self, game_service):
         super().on_close(game_service)
         # self.tcp_client.stop()
-        self.udp_client.stop()
+        # self.udp_client.stop()
 
     def on_read(self, socket, message):
 
@@ -74,15 +82,15 @@ class NetworkGameClient(GameClient):
     def on_game(self, socket, data):
         self.sync_entities(data)
 
-    def on_heartbeat(self, socket, data):
-        self.send_hearbeat()
+    # def on_heartbeat(self, socket, data):
+    #    self.send_hearbeat()
 
     def on_state(self, socket, data):
         return
 
     def process(self, dt):
-        if self.connection_severed() and self.client_id is not None:
-            self.on_disconnect()
+        # if self.connection_severed() and self.client_id is not None:
+        #    self.on_disconnect()
 
         if self.should_send_handshake():
             self.send_handshake()
@@ -90,8 +98,10 @@ class NetworkGameClient(GameClient):
         self.process_network()
 
     def process_network(self):
+        self.ws_client.process()
         # self.tcp_client.process()
-        self.udp_client.process()
+        # self.udp_client.process()
+        pass
 
     def should_send_handshake(self):
         if self.client_id is not None:
@@ -99,23 +109,22 @@ class NetworkGameClient(GameClient):
 
         return self.handshake_timer.is_elapsed()
 
-    def connection_severed(self):
-        return self.heartbeat_timer.is_elapsed()
+    # def connection_severed(self):
+    #    return self.heartbeat_timer.is_elapsed()
 
-    def send_hearbeat(self):
-        self.send_message("heartbeat", {})
-        self.heartbeat_timer.reset()
+    # def send_hearbeat(self):
+    #    self.send_message("heartbeat", {})
+    #    self.heartbeat_timer.reset()
 
     def send_handshake(self):
         self.send_message("handshake", {})
         self.handshake_timer.reset()
 
     def send_message(self, type, data, guarantee=False):
-        transport = self.udp_client
-        if guarantee:
-            transport = self.udp_client
 
-        transport.send_message(
+        transport = self.ws_client
+
+        transport.send(
             {
                 "type": type,
                 "messageId": str(uuid.uuid4()),
