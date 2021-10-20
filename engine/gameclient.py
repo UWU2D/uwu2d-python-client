@@ -1,4 +1,5 @@
 import pygame
+import pgu
 
 
 class GameClient:
@@ -27,6 +28,12 @@ class GameClient:
         pygame.quit()
         self.exit = True
 
+    def process(self):
+        raise NotImplementedError("Clients must implement process")
+
+    def on_ui(self):
+        pass
+
     def on_tick(self, dt):
 
         if self.exit:
@@ -39,8 +46,12 @@ class GameClient:
         if self.should_render:
             self.pre_render()
 
+        self.process(dt)
+
         for sprite in self.sprites.values():
             sprite.tick(dt)
+
+        self.on_ui()
 
         if self.should_render:
             self.render()

@@ -80,9 +80,7 @@ class NetworkGameClient(GameClient):
     def on_state(self, socket, data):
         return
 
-    def on_tick(self, dt):
-        super().on_tick(dt=dt)
-
+    def process(self, dt):
         if self.connection_severed() and self.client_id is not None:
             self.on_disconnect()
 
