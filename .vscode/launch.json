@@ -10,7 +10,10 @@
             "request": "launch",
             "program": "${workspaceFolder}/main.py",
             "console": "integratedTerminal",
-            "args": ["--game-package", "${workspaceFolder}/test/uwudp4client/client.py"]
+            "args": [
+                "--game-package",
+                "${workspaceFolder}/test/uwudp4client/client.py"
+            ]
         },
         {
             "name": "Test: UWUDP4Client2",
@@ -18,7 +21,10 @@
             "request": "launch",
             "program": "${workspaceFolder}/main.py",
             "console": "integratedTerminal",
-            "args": ["--game-package", "${workspaceFolder}/test/uwudp4client/client.py"]
+            "args": [
+                "--game-package",
+                "${workspaceFolder}/test/uwudp4client/client.py"
+            ]
         },
         {
             "name": "Test: UWUDP4Client Spectator",
@@ -26,7 +32,10 @@
             "request": "launch",
             "program": "${workspaceFolder}/main.py",
             "console": "integratedTerminal",
-            "args": ["--game-package", "${workspaceFolder}/test/uwudp4client/spectator.py"]
+            "args": [
+                "--game-package",
+                "${workspaceFolder}/test/uwudp4client/spectator.py"
+            ]
         },
     ]
 }
