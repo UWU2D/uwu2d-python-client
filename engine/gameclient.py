@@ -17,8 +17,7 @@ class GameClient:
     def on_load(self, game_service):
         self.game_service = game_service
 
-        self.game_service.event_manager.register_event(
-            pygame.QUIT, self.on_quit)
+        self.game_service.event_manager.register_event(pygame.QUIT, self.on_quit)
 
     def on_close(self, game_service):
         pass
@@ -33,21 +32,29 @@ class GameClient:
         if self.exit:
             return
 
+        self.game_service.event_manager.update()
+
         pygame.event.pump()
+
+        if self.should_render:
+            self.pre_render()
 
         for sprite in self.sprites.values():
             sprite.tick(dt)
 
         if self.should_render:
             self.render()
+            self.post_render()
 
-    def render(self):
+    def pre_render(self):
         pygame.display.get_surface().fill((0, 0, 0))
 
+    def render(self):
         for sprite in self.sprites.values():
             if sprite.drawable is not None:
                 sprite.drawable.draw(pygame.display.get_surface(), sprite)
 
+    def post_render(self):
         pygame.display.flip()
 
     def instantiate(self, type, debug_name, *args, **kwargs):

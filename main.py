@@ -13,17 +13,15 @@ import pygame
 
 
 def run(game: GameClient):
-    pygame.init()
     screen = pygame.display.set_mode((game.width, game.height))
     event_manager = EventManager()
-    game_service = GameService(event_manager=event_manager)
+    game_service = GameService(screen=screen, event_manager=event_manager)
 
     game.on_load(game_service=game_service)
 
     last_tick = timer()
     while not game.exit:
         now = timer()
-        event_manager.update()
         game.on_tick(now - last_tick)
         last_tick = now
 
@@ -40,10 +38,13 @@ def main():
 
     args = parser.parse_args(sys.argv[1:])
 
-    spec = importlib.util.spec_from_file_location(
-        "game_package", args.game_package)
+    spec = importlib.util.spec_from_file_location("game_package", args.game_package)
     game_package = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(game_package)
+
+    pygame.init()
+    pygame.font.init()
+
     game = game_package.create()
     run(game)
 

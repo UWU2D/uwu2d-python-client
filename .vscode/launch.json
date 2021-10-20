@@ -5,28 +5,20 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Test: UWUDP4Client",
+            "name": "Test: Pong",
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/main.py",
             "console": "integratedTerminal",
-            "args": ["--game-package", "${workspaceFolder}/test/uwudp4client/client.py"]
+            "args": ["--game-package", "${workspaceFolder}/test/uwudp4client/pongclient.py"]
         },
         {
-            "name": "Test: UWUDP4Client2",
+            "name": "Test: Snake",
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/main.py",
             "console": "integratedTerminal",
-            "args": ["--game-package", "${workspaceFolder}/test/uwudp4client/client.py"]
-        },
-        {
-            "name": "Test: UWUDP4Client Spectator",
-            "type": "python",
-            "request": "launch",
-            "program": "${workspaceFolder}/main.py",
-            "console": "integratedTerminal",
-            "args": ["--game-package", "${workspaceFolder}/test/uwudp4client/spectator.py"]
-        },
+            "args": ["--game-package", "${workspaceFolder}/test/uwudp4client/snakeclient.py"]
+        }
     ]
 }

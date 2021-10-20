@@ -3,9 +3,10 @@ from engine.services.inputservice import InputService
 
 
 class GameService:
-    def __init__(self, event_manager):
+    def __init__(self, screen, event_manager):
         self.event_manager = event_manager
         self.input_service = InputService()
+        self.screen = screen
 
         # pip key events to input service
         event_manager.register_event(pygame.KEYDOWN, self.input_service.on_event)
