@@ -20,7 +20,7 @@ class NetworkGameClient(GameClient):
         self.client_id = None
 
         self.handshake_timer = Timer(1000)
-        # self.heartbeat_timer = Timer(2000)
+        self.heartbeat_timer = Timer(2000)
 
         # monkey patch tcp client
         # self.tcp_client:TCPClient       = TCPClient(host=host, port=port)
@@ -29,19 +29,22 @@ class NetworkGameClient(GameClient):
         # self.tcp_client.on_read         = self.on_read
 
         # monkey patch udp client
-        # self.udp_client: UDPClient = UDPClient(
-        #    server_ip=host, server_port=port, self_port=port
-        # )
-        # self.udp_client.on_read = self.on_read
+        self.udp_client: UDPClient = UDPClient(
+            server_ip=host, server_port=port, self_port=port
+        )
+        self.udp_client.on_read = self.on_read
+
         self.ws_client = WSClient(host, port)
         self.ws_client.on_connect = self.on_connect
         self.ws_client.on_disconnect = self.on_disconnect
         self.ws_client.on_read = self.on_read
 
+        self.use_udp = False
+
         self.message_processing = {
             "handshake": self.on_handshake,
             "game": self.on_game,
-            # "heartbeat": self.on_heartbeat,
+            "heartbeat": self.on_heartbeat,
             "state": self.on_state,
         }
 
@@ -50,7 +53,7 @@ class NetworkGameClient(GameClient):
 
     def on_connect(self, s):
         self.connected = True
-        # self.heartbeat_timer.reset()
+        self.heartbeat_timer.reset()
 
     def on_disconnect(self):
         self.destroy_all_entities()
@@ -60,7 +63,7 @@ class NetworkGameClient(GameClient):
     def on_close(self, game_service):
         super().on_close(game_service)
         # self.tcp_client.stop()
-        # self.udp_client.stop()
+        self.udp_client.stop()
 
     def on_read(self, socket, message):
 
@@ -82,15 +85,15 @@ class NetworkGameClient(GameClient):
     def on_game(self, socket, data):
         self.sync_entities(data)
 
-    # def on_heartbeat(self, socket, data):
-    #    self.send_hearbeat()
+    def on_heartbeat(self, socket, data):
+        self.send_hearbeat()
 
     def on_state(self, socket, data):
         return
 
     def process(self, dt):
-        # if self.connection_severed() and self.client_id is not None:
-        #    self.on_disconnect()
+        if self.use_udp and self.connection_severed() and self.client_id is not None:
+            self.on_disconnect()
 
         if self.should_send_handshake():
             self.send_handshake()
@@ -98,9 +101,11 @@ class NetworkGameClient(GameClient):
         self.process_network()
 
     def process_network(self):
-        self.ws_client.process()
+        if self.use_udp:
+            self.udp_client.process()
+        else:
+            self.ws_client.process()
         # self.tcp_client.process()
-        # self.udp_client.process()
         pass
 
     def should_send_handshake(self):
@@ -109,12 +114,12 @@ class NetworkGameClient(GameClient):
 
         return self.handshake_timer.is_elapsed()
 
-    # def connection_severed(self):
-    #    return self.heartbeat_timer.is_elapsed()
+    def connection_severed(self):
+        return self.heartbeat_timer.is_elapsed()
 
-    # def send_hearbeat(self):
-    #    self.send_message("heartbeat", {})
-    #    self.heartbeat_timer.reset()
+    def send_hearbeat(self):
+        self.send_message("heartbeat", {})
+        self.heartbeat_timer.reset()
 
     def send_handshake(self):
         self.send_message("handshake", {})
