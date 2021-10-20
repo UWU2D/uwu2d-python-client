@@ -132,7 +132,7 @@ class NetworkGameClient(GameClient):
 
     def sync_entity(self, game_object):
         id = game_object["id"]
-        type = game_object["type"]
+        type = game_object["data"]["shape"]
 
         # we have not encountered this sprite yet
         if id not in self.sprites:
