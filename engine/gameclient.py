@@ -31,8 +31,8 @@ class GameClient:
     def process(self):
         raise NotImplementedError("Clients must implement process")
 
-    def on_ui(self):
-        pass
+    def on_ui(self, dt):
+        self.game_service.ui_manager.update(dt)
 
     def on_tick(self, dt):
 
@@ -54,7 +54,9 @@ class GameClient:
         for sprite in self.sprites.values():
             sprite.tick(dt)
 
-        self.on_ui()
+        self.on_ui(dt)
+
+        self.game_service.ui_manager.draw_ui(self.game_service.screen)
 
         if self.should_render:
             self.render()

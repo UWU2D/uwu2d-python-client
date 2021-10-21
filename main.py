@@ -13,9 +13,10 @@ import pygame
 
 
 def run(game: GameClient):
-    screen = pygame.display.set_mode((game.width, game.height))
+    screen_size = (game.width, game.height)
+    screen = pygame.display.set_mode(screen_size)
     event_manager = EventManager()
-    game_service = GameService(screen=screen, event_manager=event_manager)
+    game_service = GameService(screen_size, screen=screen, event_manager=event_manager)
 
     game.on_load(game_service=game_service)
 
