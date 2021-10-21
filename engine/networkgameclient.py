@@ -64,6 +64,7 @@ class NetworkGameClient(GameClient):
         super().on_close(game_service)
         # self.tcp_client.stop()
         self.udp_client.stop()
+        self.ws_client.stop()
 
     def on_read(self, socket, message):
 

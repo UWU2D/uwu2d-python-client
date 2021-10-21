@@ -9,11 +9,16 @@ class WSClient:
         self.url = f"ws://{host}:{port}"
         self.socket = websocket.WebSocket()
 
+        self.run_thread = True
         self.read_queue = queue.Queue()
         self.thread = None
 
     def is_connected(self):
         return self.socket.connected
+
+    def stop(self):
+        self.run_thread = False
+        self.thread.join()
 
     def on_connect(self, s):
         raise NotImplementedError("Implement on_connect")
@@ -25,7 +30,7 @@ class WSClient:
         raise NotImplementedError("Implement on_read")
 
     def read_thread(self):
-        while True:
+        while self.run_thread:
             try:
                 msg = self.socket.recv()
             except Exception as e:
