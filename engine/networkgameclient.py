@@ -127,7 +127,10 @@ class NetworkGameClient(GameClient):
 
     def send_message(self, type, data, guarantee=False):
 
-        transport = self.ws_client
+        if self.use_udp:
+            transport = self.udp_client
+        else:
+            transport = self.ws_client
 
         transport.send(
             {
