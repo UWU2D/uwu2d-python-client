@@ -6,14 +6,13 @@ import pygame
 
 
 def create():
-    return UWUDP4Client(host="127.0.0.1")
-    # return UWUDP4Client(host="76.200.210.99")
+    # return UWUDP4Client(host="127.0.0.1")
+    return UWUDP4Client(host="76.200.210.99")
 
 
 class UWUDP4Client(NetworkGameClient):
     def __init__(self, host):
         super().__init__(host=host, port=41234, width=680, height=440)
-        self.scores = {}
         self.font = pygame.font.SysFont("default", 24)
         self.player_1_score = 0
         self.player_2_score = 0
