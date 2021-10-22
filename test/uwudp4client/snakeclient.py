@@ -10,7 +10,7 @@ def create():
 
 class UWUDP4Client(NetworkGameClient):
     def __init__(self, host):
-        super().__init__(width=1280, height=720)
+        super().__init__(width=1920, height=1280)
 
     def on_read(self, s, message):
         super().on_read(s, message)
