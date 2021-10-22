@@ -186,4 +186,4 @@ class InputService(Service):
         self.mouse_motion_listeners.append(callback)
 
     def register_mouse_click(self, callback):
-        self.mouse_click_listener.append(callback)
+        self.mouse_click_listeners.append(callback)
