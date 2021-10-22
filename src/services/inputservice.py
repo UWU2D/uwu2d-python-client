@@ -1,5 +1,6 @@
-from engine.services.keystack import KeyStack
 import pygame
+
+from ..services.keystack import KeyStack
 from .service import Service
 
 

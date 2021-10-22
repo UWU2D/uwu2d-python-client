@@ -1,5 +1,5 @@
 import pygame
-from engine.drawable.drawable import Drawable
+from .drawable import Drawable
 
 
 class PolygonDrawable(Drawable):

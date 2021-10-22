@@ -1,5 +1,3 @@
-import pygame
-
 
 class KeyStack(list):
     def press(self, id):

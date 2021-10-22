@@ -1,3 +1,2 @@
 pygame==2.0.2
-pygame-gui==0.5.7
 websocket-client==1.2.1

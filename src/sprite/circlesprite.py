@@ -1,6 +1,6 @@
-from engine.drawable.circledrawable import CircleDrawable
-from engine.math.vector2d import Vector2D
-from engine.sprite.sprite import Sprite
+from ..drawable.circledrawable import CircleDrawable
+from ..math.vector2d import Vector2D
+from ..sprite.sprite import Sprite
 
 import pygame
 

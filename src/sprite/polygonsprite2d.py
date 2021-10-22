@@ -1,7 +1,5 @@
-from engine.drawable.polygondrawable import PolygonDrawable
-from engine.sprite.sprite import Sprite
-from engine.math.vector2d import Vector2D
-import engine.math.math as engine_math
+from ..drawable.polygondrawable import PolygonDrawable
+from ..sprite.sprite import Sprite
 
 import pygame
 

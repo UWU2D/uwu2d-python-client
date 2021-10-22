@@ -1,4 +1,4 @@
-from engine.math.vector2d import Vector2D
+from .vector2d import Vector2D
 import math
 
 

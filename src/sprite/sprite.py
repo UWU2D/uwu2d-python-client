@@ -1,10 +1,4 @@
-from __future__ import annotations
-
 import pygame
-from engine.drawable.drawable import Drawable
-import math
-from engine.math.vector2d import Vector2D
-import engine.math.math as engine_math
 
 
 class Sprite:
@@ -37,8 +31,7 @@ class Sprite:
 
         if "rgba" in data:
             rgba = data["rgba"]
-            self.color = pygame.color.Color(
-                rgba[0], rgba[1], rgba[2], rgba[3] * 255)
+            self.color = pygame.color.Color(rgba[0], rgba[1], rgba[2], rgba[3] * 255)
         elif "color" in data:
             self.color = data["color"]
 
