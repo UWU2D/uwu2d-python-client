@@ -172,10 +172,8 @@ class InputService(Service):
                 c(
                     event.pos[0],
                     event.pos[1],
-                    event.button == pygame.BUTTON_LEFT
-                    and event.type == pygame.MOUSEBUTTONDOWN,
-                    event.button == pygame.BUTTON_RIGHT
-                    and event.type == pygame.MOUSEBUTTONDOWN,
+                    event.button,
+                    event.type == pygame.MOUSEBUTTONDOWN,
                 )
 
     def register_key_event(self, key_code, callback):
