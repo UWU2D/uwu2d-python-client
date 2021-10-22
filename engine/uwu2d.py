@@ -5,7 +5,7 @@ from engine.network.ws.wsclient import WSClient
 from engine.services.timer import Timer
 
 
-class NetworkGameClient(GameClient):
+class UWU2D(GameClient):
     def __init__(self, width, height, *args, **kwargs):
         GameClient.__init__(self, width, height, *args, **kwargs)
 
@@ -134,3 +134,6 @@ class NetworkGameClient(GameClient):
                 "data": data,
             }
         )
+
+    def on_ui(self, dt):
+        super().on_ui(dt)

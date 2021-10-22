@@ -4,42 +4,5 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-
-        {
-            "name": "Test: Pong",
-            "type": "python",
-            "request": "launch",
-            "program": "${workspaceFolder}/main.py",
-            "justMyCode": false,
-            "console": "integratedTerminal",
-            "args": ["--game-package", "${workspaceFolder}/test/uwudp4client/pongclient.py"]
-        },
-        {
-            "name": "Test: Snake",
-            "type": "python",
-            "request": "launch",
-            "program": "${workspaceFolder}/main.py",
-            "console": "integratedTerminal",
-            "justMyCode": false,
-            "args": ["--game-package", "${workspaceFolder}/test/uwudp4client/snakeclient.py"]
-        },
-        {
-            "name": "Test: Shooter2d",
-            "type": "python",
-            "request": "launch",
-            "program": "${workspaceFolder}/main.py",
-            "console": "integratedTerminal",
-            "justMyCode": false,
-            "args": ["--game-package", "${workspaceFolder}/test/uwudp4client/2dshooterclient.py"]
-        },
-        {
-            "name": "Test: Generic",
-            "type": "python",
-            "request": "launch",
-            "program": "${workspaceFolder}/main.py",
-            "console": "integratedTerminal",
-            "justMyCode": false,
-            "args": ["--game-package", "${workspaceFolder}/generic/uwu2dgenericclient.py"]
-        }
     ]
 }
