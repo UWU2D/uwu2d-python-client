@@ -134,7 +134,7 @@ class UWU2DGenericClient(NetworkGameClient):
 
         self.send_message(
             "game",
-            {"type": "mouse", "x": x, "y": y, "button": button, "pressed": pressed},
+            {"type": "click", "x": x, "y": y, "button": button, "pressed": pressed},
         )
 
     def on_ui(self, dt):
