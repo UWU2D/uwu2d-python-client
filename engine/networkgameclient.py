@@ -29,16 +29,6 @@ class NetworkGameClient(GameClient):
 
         self.ws_client = None
         self.udp_client = None
-        # self.udp_client: UDPClient = UDPClient(
-        #     server_ip=host, server_port=port, self_port=port
-        # )
-        # self.udp_client.on_read = self.on_read
-
-        # self.ws_client = WSClient(host, port)
-        # self.ws_client.on_connect = self.on_connect
-        # self.ws_client.on_disconnect = self.on_disconnect
-        # self.ws_client.on_read = self.on_read
-        # self.use_udp = False
 
         self.message_processing = {
             "handshake": self.on_handshake,
@@ -66,8 +56,10 @@ class NetworkGameClient(GameClient):
     def on_close(self, game_service):
         super().on_close(game_service)
         # self.tcp_client.stop()
-        self.udp_client.stop()
-        self.ws_client.stop()
+        if self.udp_client:
+            self.udp_client.stop()
+        if self.ws_client:
+            self.ws_client.stop()
 
     def on_read(self, socket, message):
 
@@ -103,16 +95,13 @@ class NetworkGameClient(GameClient):
                     pygame.Rect(0, 0, 400, 300), self.game_service.ui_manager
                 )
 
-                self.server_ip = pygame_gui.elements.UITextEntryLine(
-                    pygame.Rect(25, 25, 100, 300),
-                    self.game_service.ui_manager,
-                    self.server_window,
-                )
-                self.server_port = pygame_gui.elements.UITextEntryLine(
+                self.server_url = pygame_gui.elements.UITextEntryLine(
                     pygame.Rect(25, 50, 100, 300),
                     self.game_service.ui_manager,
                     self.server_window,
                 )
+                self.server_url.text = "ws://localhost:41234"
+
                 self.connect_button = pygame_gui.elements.UIButton(
                     pygame.Rect(100, 200, 100, 300),
                     text="Click",
@@ -123,25 +112,16 @@ class NetworkGameClient(GameClient):
                 self.game_service.event_manager.register_event(
                     pygame.USEREVENT, self.on_server_data_entry
                 )
-                # self.server_window.add(
-                #     [
-                #         pygame_gui.elements.UIButton(
-                #             pygame.Rect(0, 0, 50, 50),
-                #             "Click Me",
-                #             self.game_service.ui_manager,
-                #         )
-                #     ]
-                # )
         super().on_ui(dt)
 
     def on_server_data_entry(self, event):
         if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
             if event.ui_element == self.connect_button:
-                self.try_connect(self.server_ip.text, self.server_port.text)
+                self.try_connect(self.server_url.text)
 
-    def try_connect(self, host, port):
+    def try_connect(self, url):
         if self.ws_client is None:
-            self.ws_client = WSClient(host, port)
+            self.ws_client = WSClient(url)
             self.ws_client.on_connect = self.on_connect
             self.ws_client.on_disconnect = self.on_disconnect
             self.ws_client.on_read = self.on_read
@@ -166,8 +146,6 @@ class NetworkGameClient(GameClient):
             self.udp_client.process()
         if self.ws_client is not None:
             self.ws_client.process()
-        # self.tcp_client.process()
-        pass
 
     def should_send_handshake(self):
         if self.client_id is not None:

@@ -5,20 +5,22 @@ import queue
 
 
 class WSClient:
-    def __init__(self, host=None, port=None):
-        self.url = f"ws://{host}:{port}"
+    def __init__(self, url=None):
+        self.url = url
         self.socket = websocket.WebSocket()
 
         self.run_thread = True
         self.read_queue = queue.Queue()
         self.thread = None
+        self.previously_connected = False
 
     def is_connected(self):
         return self.socket.connected
 
     def stop(self):
         self.run_thread = False
-        self.thread.join()
+        if self.thread is not None:
+            self.thread.join()
 
     def on_connect(self, s):
         raise NotImplementedError("Implement on_connect")
@@ -31,22 +33,30 @@ class WSClient:
 
     def read_thread(self):
         while self.run_thread:
+            if not self.socket.connected:
+                continue
+
             try:
                 msg = self.socket.recv()
-            except Exception as e:
-                continue
+            except ConnectionResetError as e:
+                self.socket.close()
             else:
                 self.read_queue.put(msg)
 
     def process(self):
         if not self.socket.connected:
-            self.connect()
-
-            if not self.socket.connected:
-                return
+            if self.previously_connected:
+                self.on_disconnect()
+                self.previously_connected = False
             else:
-                self.thread = threading.Thread(target=self.read_thread)
-                self.thread.start()
+                self.connect()
+
+                if not self.socket.connected:
+                    return
+                else:
+                    if self.thread is None:
+                        self.thread = threading.Thread(target=self.read_thread)
+                        self.thread.start()
 
         while not self.read_queue.empty():
             next = self.read_queue.get_nowait()
@@ -71,6 +81,7 @@ class WSClient:
 
         try:
             self.socket.connect(self.url)
+            self.previously_connected = True
         except Exception as e:
             # print(str(e))
             return

@@ -1,5 +1,4 @@
 import pygame
-import pgu
 
 
 class GameClient:
