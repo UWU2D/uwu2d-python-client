@@ -38,9 +38,9 @@ class WSClient:
 
             try:
                 msg = self.socket.recv()
-            except (
-                ConnectionResetError | websocket.WebSocketConnectionClosedException
-            ) as e:
+            except ConnectionResetError as e:
+                self.socket.close()
+            except websocket.WebSocketConnectionClosedException as e:
                 self.socket.close()
             else:
                 self.read_queue.put(msg)
