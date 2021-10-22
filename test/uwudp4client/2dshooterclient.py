@@ -21,16 +21,16 @@ class UWUDP4Client(NetworkGameClient):
 
         # register for input
         game_service.input_service.register_key_event(
-            InputService.KEY_UP, self.on_up_arrow
+            InputService.KEY_w, self.on_up_arrow
         )
         game_service.input_service.register_key_event(
-            InputService.KEY_DOWN, self.on_down_arrow
+            InputService.KEY_s, self.on_down_arrow
         )
         game_service.input_service.register_key_event(
-            InputService.KEY_LEFT, self.on_left_arrow
+            InputService.KEY_a, self.on_left_arrow
         )
         game_service.input_service.register_key_event(
-            InputService.KEY_RIGHT, self.on_right_arrow
+            InputService.KEY_d, self.on_right_arrow
         )
         game_service.input_service.register_mouse_motion(self.on_mouse_motion)
         game_service.input_service.register_mouse_click(self.on_mouse_click)
