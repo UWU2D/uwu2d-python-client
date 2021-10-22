@@ -48,6 +48,4 @@ class UWUDP4Client(NetworkGameClient):
         super().on_load(game_service)
 
         game_service.input_service.register_mouse_motion(self.on_mouse_motion)
-
-    def on_mouse_motion(self, x, y):
-        self.send_message("game", {"type": "mouse", "x": x, "y": y})
+        game_service.input_service.register_mouse_click(self.on_mouse_click)

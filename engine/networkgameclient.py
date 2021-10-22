@@ -1,17 +1,8 @@
 import uuid
-import pygame
-
-import pygame_gui
-from engine.network.udp.udpclient import UDPClient
-from engine.services.inputservice import InputService
-from engine.services.timer import Timer
-from engine.sprite.polygonsprite2d import PolygonSprite2D
-
-from engine.sprite.circlesprite import CircleSprite
-from engine.network.udp.udpclient import UDPClient
 from engine.gameclient import GameClient
 
 from engine.network.ws.wsclient import WSClient
+from engine.services.timer import Timer
 
 
 class NetworkGameClient(GameClient):
@@ -32,9 +23,7 @@ class NetworkGameClient(GameClient):
 
         self.message_processing = {
             "handshake": self.on_handshake,
-            "game": self.on_game,
             "heartbeat": self.on_heartbeat,
-            "state": self.on_state,
         }
 
         self.server_window = None
@@ -65,10 +54,8 @@ class NetworkGameClient(GameClient):
 
         type = message["type"]
 
-        if type not in self.message_processing:
-            print(f"Unknown message type {type}")
-
-        self.message_processing[type](socket, message["data"])
+        if type in self.message_processing:
+            self.message_processing[type](socket, message["data"])
 
     def on_handshake(self, socket, data):
         if self.client_id is None:
@@ -78,46 +65,11 @@ class NetworkGameClient(GameClient):
         else:
             print("Got second client id")
 
-    def on_game(self, socket, data):
-        self.sync_entities(data)
-
     def on_heartbeat(self, socket, data):
         self.send_hearbeat()
 
     def on_state(self, socket, data):
         return
-
-    def on_ui(self, dt):
-
-        if self.wait_for_user_input:
-            if self.server_window is None:
-                self.server_window = pygame_gui.elements.UIWindow(
-                    pygame.Rect(0, 0, 400, 300), self.game_service.ui_manager
-                )
-
-                self.server_url = pygame_gui.elements.UITextEntryLine(
-                    pygame.Rect(25, 50, 100, 300),
-                    self.game_service.ui_manager,
-                    self.server_window,
-                )
-                self.server_url.text = "ws://localhost:41234"
-
-                self.connect_button = pygame_gui.elements.UIButton(
-                    pygame.Rect(100, 200, 100, 300),
-                    text="Click",
-                    manager=self.game_service.ui_manager,
-                    container=self.server_window,
-                )
-
-                self.game_service.event_manager.register_event(
-                    pygame.USEREVENT, self.on_server_data_entry
-                )
-        super().on_ui(dt)
-
-    def on_server_data_entry(self, event):
-        if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
-            if event.ui_element == self.connect_button:
-                self.try_connect(self.server_url.text)
 
     def try_connect(self, url):
         if self.ws_client is None:
@@ -182,28 +134,3 @@ class NetworkGameClient(GameClient):
                 "data": data,
             }
         )
-
-    def sync_entities(self, game_objects):
-        for game_object in game_objects:
-            self.sync_entity(game_object)
-
-    def sync_entity(self, game_object):
-        id = game_object["id"]
-        type = game_object["data"]["shape"]
-
-        # we have not encountered this sprite yet
-        if id not in self.sprites:
-            # create it based on the types we know
-            if type == "circle":
-                self.sprites[id] = CircleSprite(id=id)
-            elif type == "polygon":
-                self.sprites[id] = PolygonSprite2D(id=id)
-            else:
-                print("Unknown sprite type: " + type)
-                return
-
-        if game_object["state"] == "deleted":
-            self.destroy(id)
-        else:
-            # Update the info
-            self.sprites[id].sync(game_object)

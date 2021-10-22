@@ -19,36 +19,16 @@ class UWUDP4Client(NetworkGameClient):
         super().on_load(game_service)
 
         # register for input
-        game_service.input_service.register_key_event(
-            InputService.KEY_UP, self.on_up_arrow
-        )
-        game_service.input_service.register_key_event(
-            InputService.KEY_DOWN, self.on_down_arrow
-        )
-        game_service.input_service.register_key_event(
-            InputService.KEY_LEFT, self.on_left_arrow
-        )
-        game_service.input_service.register_key_event(
-            InputService.KEY_RIGHT, self.on_right_arrow
-        )
+        self.register_key(InputService.KEY_UP)
+        self.register_key(InputService.KEY_DOWN)
+        self.register_key(InputService.KEY_LEFT)
+        self.register_key(InputService.KEY_RIGHT)
+
         game_service.input_service.register_mouse_motion(self.on_mouse_motion)
-
-    def on_up_arrow(self, key, pressed):
-        self.on_arrow("up", pressed)
-
-    def on_down_arrow(self, key, pressed):
-        self.on_arrow("down", pressed)
-
-    def on_left_arrow(self, key, pressed):
-        self.on_arrow("left", pressed)
-
-    def on_right_arrow(self, key, pressed):
-        self.on_arrow("right", pressed)
-
-    def on_arrow(self, key_name, pressed):
-        self.send_message(
-            "game", {"type": "keyPress", "key": key_name, "pressed": pressed}
-        )
+        game_service.input_service.register_mouse_click(self.on_mouse_click)
 
     def on_mouse_motion(self, x, y):
         self.send_message("game", {"type": "mouse", "x": x, "y": y})
+
+    def on_mouse_click(self, x, y, left, right):
+        print(f"{x}:{y}:{left}:{right}")

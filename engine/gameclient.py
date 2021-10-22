@@ -16,7 +16,6 @@ class GameClient:
 
     def on_load(self, game_service):
         self.game_service = game_service
-
         self.game_service.event_manager.register_event(pygame.QUIT, self.on_quit)
 
     def on_close(self, game_service):
