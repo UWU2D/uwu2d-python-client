@@ -1,6 +1,6 @@
 import uuid
 
-from .network.ws.wsclient import WSClient
+from .network.wsclient import WSClient
 from .baseclient import BaseClient
 from .services.timer import Timer
 
