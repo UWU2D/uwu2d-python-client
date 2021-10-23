@@ -10,7 +10,6 @@ setup(
     license="The Unlicense (Unlicense)",
     packages=find_packages(),
     install_requires=[
-        "pygame>=2.0",
         "websocket-client>=1.2.1",
     ],
     classifiers=[
