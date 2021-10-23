@@ -5,12 +5,6 @@ import time
 from .core.pywu2dclient import PyWU2DClient
 from .core.event.eventmanager import EventManager
 from .core.gameservice import GameService
-from .core import sprite
-from .core import services
-from .core import network
-from .core import math
-from .core import drawable
-from .core import event
 
 
 __all__ = [
