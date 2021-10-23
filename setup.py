@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="pywu2d-client",
-    version="0.1.4",
+    version="0.2.0",
     description="Basic network client for UWU2D Framework",
     url="https://github.com/claybrooks/pywu2d-client",
     author="Clay Brooks",
