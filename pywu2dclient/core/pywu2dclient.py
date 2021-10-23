@@ -1,18 +1,13 @@
-import pygame
 import uuid
-from timeit import default_timer as timer
 
-from .src.event.eventmanager import EventManager
-from .src.gameservice import GameService
-from .src.gameclient import GameClient
-
-from .src.network.ws.wsclient import WSClient
-from .src.services.timer import Timer
+from .network.ws.wsclient import WSClient
+from .baseclient import BaseClient
+from .services.timer import Timer
 
 
-class PyWU2DClient(GameClient):
+class PyWU2DClient(BaseClient):
     def __init__(self, width, height, *args, **kwargs):
-        GameClient.__init__(self, width, height, *args, **kwargs)
+        BaseClient.__init__(self, width, height, *args, **kwargs)
 
         self.join_id = str(uuid.uuid4())
 
@@ -24,7 +19,6 @@ class PyWU2DClient(GameClient):
         self.wait_for_user_input = True
 
         self.ws_client = None
-        self.udp_client = None
 
         self.message_processing = {
             "handshake": self.on_handshake,
@@ -49,9 +43,7 @@ class PyWU2DClient(GameClient):
 
     def on_close(self, game_service):
         super().on_close(game_service)
-        # self.tcp_client.stop()
-        if self.udp_client:
-            self.udp_client.stop()
+
         if self.ws_client:
             self.ws_client.stop()
 
@@ -82,7 +74,6 @@ class PyWU2DClient(GameClient):
             self.ws_client.on_connect = self.on_connect
             self.ws_client.on_disconnect = self.on_disconnect
             self.ws_client.on_read = self.on_read
-            self.use_udp = False
             self.wait_for_user_input = False
 
     def process(self, dt):
@@ -92,15 +83,10 @@ class PyWU2DClient(GameClient):
         if self.wait_for_user_input:
             return
 
-        if self.use_udp and self.connection_severed() and self.client_id is not None:
-            self.on_disconnect()
-
         if self.should_send_handshake():
             self.send_handshake()
 
     def process_network(self):
-        if self.udp_client is not None:
-            self.udp_client.process()
         if self.ws_client is not None:
             self.ws_client.process()
 
@@ -126,12 +112,7 @@ class PyWU2DClient(GameClient):
         if self.wait_for_user_input:
             return
 
-        if self.use_udp:
-            transport = self.udp_client
-        else:
-            transport = self.ws_client
-
-        transport.send(
+        self.ws_client.send(
             {
                 "type": type,
                 "messageId": str(uuid.uuid4()),
@@ -142,24 +123,3 @@ class PyWU2DClient(GameClient):
 
     def on_ui(self, dt):
         super().on_ui(dt)
-
-
-def run(game_factory):
-
-    pygame.init()
-    pygame.font.init()
-
-    game = game_factory.create()
-
-    screen_size = (game.width, game.height)
-    screen = pygame.display.set_mode(screen_size)
-    event_manager = EventManager()
-    game_service = GameService(screen_size, screen=screen, event_manager=event_manager)
-
-    game.on_load(game_service=game_service)
-
-    last_tick = timer()
-    while not game.exit:
-        now = timer()
-        game.on_tick(now - last_tick)
-        last_tick = now
