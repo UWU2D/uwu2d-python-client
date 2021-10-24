@@ -1,3 +1,4 @@
+from socket import socket
 import websocket
 import json
 import threading
@@ -13,9 +14,11 @@ class WebsocketClient(INetworkClient):
         self.socket = websocket.WebSocket()
 
         self.run_thread = True
+        self.try_to_connect = True
+
         self.read_queue = queue.Queue()
-        self.thread = None
-        self.previously_connected = False
+        self.thread = threading.Thread(target=self.thread_read)
+        self.thread.start()
 
     def is_connected(self):
         return self.socket.connected
@@ -24,18 +27,8 @@ class WebsocketClient(INetworkClient):
         if self.socket.connected:
             return True
 
-        try:
-            self.socket.connect(self.url)
-        except Exception as e:
-            # print(str(e))
-            return False
-
-        self.previously_connected = True
-        if self.thread is None:
-            self.thread = threading.Thread(target=self.read_thread)
-            self.thread.start()
-
-        return True
+        self.try_to_connect = True
+        return False
 
     def stop(self):
         self.run_thread = False
@@ -58,10 +51,17 @@ class WebsocketClient(INetworkClient):
 
         return True
 
-    def read_thread(self):
+    def thread_read(self):
         while self.run_thread:
+
+            if not self.socket.connected and self.try_to_connect:
+                self.thread_connect()
+
             if not self.socket.connected:
                 continue
+
+            if self.try_to_connect:
+                self.try_to_connect = False
 
             try:
                 msg = self.socket.recv()
@@ -72,28 +72,8 @@ class WebsocketClient(INetworkClient):
             else:
                 self.read_queue.put(msg)
 
-    # def process(self):
-    #     if not self.socket.connected:
-    #         if self.previously_connected:
-    #             self.on_disconnect()
-    #             self.previously_connected = False
-    #         else:
-    #             self.connect()
-
-    #             if not self.socket.connected:
-    #                 return
-    #             else:
-    #                 if self.thread is None:
-    #                     self.thread = threading.Thread(target=self.read_thread)
-    #                     self.thread.start()
-
-    #     while not self.read_queue.empty():
-    #         next = self.read_queue.get_nowait()
-    #         try:
-    #             msg = json.loads(next)
-    #         except Exception as e:
-    #             print("Error converting messsage to json: " + str(e))
-    #             return
-
-    #         if msg not in [None, ""]:
-    #             self.on_read(self.socket, msg)
+    def thread_connect(self):
+        try:
+            self.socket.connect(self.url)
+        except Exception as e:
+            pass

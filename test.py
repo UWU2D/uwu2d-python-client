@@ -18,11 +18,14 @@ class Handler(messaghandler.IMessageHandler):
     def on_handshake(self, clientId):
         print("on_handshake, clientId: " + clientId)
 
+    def on_client_config(self, clientConfig):
+        print("on_client_config, clientConfig: " + clientConfig)
+
 
 if __name__ == "__main__":
 
     service = uwu2dservice.UWU2DService(
-        websocketclient.WebsocketClient("ws://localhost:41234"), Handler()
+        websocketclient.WebsocketClient("ws://localhost:8000"), Handler()
     )
 
     exit = False

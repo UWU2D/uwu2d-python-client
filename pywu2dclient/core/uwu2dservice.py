@@ -18,6 +18,12 @@ class UWU2DService(IUWU2DService):
 
         self.handshake_timer = Timer(1000)
 
+    def is_connected(self):
+        if self.network_client is None:
+            return False
+
+        return self.network_client.is_connected()
+
     def maintain(self):
 
         self.maintain_network()
@@ -75,6 +81,8 @@ class UWU2DService(IUWU2DService):
 
         if message_type == "handshake":
             self.handle_handshake(data)
+            if "config" in data:
+                self.message_handler.on_client_config(data["config"])
         else:
             self.message_handler.on_read(message_type, message_id, data)
 
