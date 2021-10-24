@@ -1,1 +1,1 @@
-# uwudp4-py-client
+# uwu2d-python-client
