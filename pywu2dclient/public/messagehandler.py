@@ -1,7 +1,4 @@
 class IMessageHandler:
-    def __init__(self):
-        return
-
     def on_connect(self):
         raise NotImplementedError("MessageHandler.on_connect needs to be implemented")
 
@@ -14,6 +11,9 @@ class IMessageHandler:
         raise NotImplementedError("MessageHandler.on_read needs to be implemented")
 
     def on_handshake(self):
+        raise NotImplementedError("MessageHandler.on_handshake needs to be implemented")
+
+    def on_sync(self, message):
         raise NotImplementedError("MessageHandler.on_handshake needs to be implemented")
 
     def on_client_config(self, config):

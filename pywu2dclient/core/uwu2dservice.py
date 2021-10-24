@@ -32,7 +32,7 @@ class UWU2DService(IUWU2DService):
             self.read_network()
 
         if self.should_send_handshake():
-            self.handshake()
+            self.send_handshake()
 
     def stop(self):
         self.network_client.stop()
@@ -40,6 +40,9 @@ class UWU2DService(IUWU2DService):
     def maintain_network(self):
         # nothing to do if client is connected
         if self.network_client.is_connected():
+            if not self.was_previously_connected:
+                self.handle_connect()
+
             return
 
         # on previous loop, we were connected, so we just caught a disconnect
@@ -47,12 +50,7 @@ class UWU2DService(IUWU2DService):
             self.handle_disconnect()
         # previous loop was not connected, try to connect
         else:
-
             self.network_client.connect()
-
-            # we are not connected
-            if self.network_client.is_connected():
-                self.handle_connect()
 
     def read_network(self):
         try:
@@ -83,6 +81,8 @@ class UWU2DService(IUWU2DService):
             self.handle_handshake(data)
             if "config" in data:
                 self.message_handler.on_client_config(data["config"])
+        elif message_type == "sync":
+            self.handle_sync(data)
         else:
             self.message_handler.on_read(message_type, message_id, data)
 
@@ -90,15 +90,21 @@ class UWU2DService(IUWU2DService):
         self.client_id = message["id"]
         self.message_handler.on_handshake(self.client_id)
 
+    def handle_sync(self, message):
+        self.message_handler.on_sync(message)
+
     def should_send_handshake(self):
         if self.client_id is not None:
             return False
 
         return self.handshake_timer.is_elapsed()
 
-    def handshake(self):
+    def send_handshake(self):
         self.send_message("handshake", {})
         self.handshake_timer.reset()
+
+    def send_sync(self):
+        self.send_message("sync", {})
 
     def send_message(self, type, data):
         self.network_client.send(

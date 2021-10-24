@@ -10,3 +10,12 @@ class IUWU2DService:
 
     def stop(self):
         raise NotImplementedError("UWU2DService.stop should be implemented")
+
+    def send_handshake(self):
+        raise NotImplementedError("UWU2DService.send_handshake should be implemented")
+
+    def send_sync(self):
+        raise NotImplementedError("UWU2DService.send_sync should be implemented")
+
+    def send_message(self, type, data):
+        raise NotImplementedError("UWU2DService.send_message should be implemented")
